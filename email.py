@@ -5,11 +5,27 @@ from docx import Document
 from openpyxl.workbook import Workbook
 from openpyxl import load_workbook
 
+
+# The layout of the code i the following:
+    # Section 1: 
+        # base python functionality of the code - whatever was needed to preprocess
+        # the data (e.g. word & excel documents)
+    # Section 2:
+        # function definition for 
+    # Section 3:
+        # the tkinter code that creates the GUI layout of the program
+    # Section 4:
+        # email functionality
+
+
+
+# SECTION 1
+
 document = Document("ctp1.docx")
 
 # get all the titles, subtitles and body texts.
 templates = []
-subjects = []
+subjects = []   
 curr_paragraph = ""
 bodytexts = []
 x = 0
@@ -37,16 +53,53 @@ sheets = wb.sheetnames
 ca = wb[sheets[1]]
 email = wb[sheets[2]]
 
-engagements = []
+eng_name = []
+engagement = []
 manager = []
 reviewer = []
 preparer = []
+emails = []
 
 for i in range (2,5):
-    engagements.append(ca[f"A{i}"].value)
+    eng_name.append(ca[f"A{i}"].value)
     manager.append(ca[f"B{i}"].value)
     reviewer.append(ca[f"C{i}"].value)
     preparer.append(ca[f"D{i}"].value)
+    # should turn this into a list of dictionaries where eng name and team and the team
+    # is another dict for Man/Reviewer/Preparer
+
+
+
+for i in range (2,5):
+    name = email[f"A{i}"].value
+    address = email[f"B{i}"].value
+    emails.append({"name":name,"email":address})
+
+def getTemplate():
+    chosen_template = template_list.get()    
+    temp_num = template_list.current()
+
+    return chosen_template, temp_num
+
+def getEngagement():
+    chosen_engagement = engagement_list.get()
+    eng_num = engagement_list.current()
+
+    return chosen_engagement, eng_num
+
+def get_emails():
+    chosen_engagement = engagement_list.get()
+
+    pass
+
+def getRemaining():
+    temp_chosen, temp_num = getTemplate()
+    eng_chosen, eng_num = getEngagement()
+    print(subjects[temp_num])
+    print(bodytexts[temp_num])
+    print(manager[eng_num])
+    print(reviewer[eng_num])
+    print(preparer[eng_num])
 
 # create window
 root = Tk()
@@ -102,35 +155,17 @@ template_label.grid(row=1, column=1)
 template_list = ttk.Combobox(frame1, values = templates)
 template_list.grid(row=2, column=0, columnspan=3)
 
+
 engagement_label = Label(frame2, text="Engagement?")
 engagement_label.pack()
-engagement_list = ttk.Combobox(frame2, values = engagements)
+engagement_list = ttk.Combobox(frame2, values = eng_name)
 engagement_list.pack()
 
-
-def getTemplate():
-    chosen_template = template_list.get()    
-    temp_num = template_list.current()
-
-    return chosen_template, temp_num
-
-def getEngagement():
-    chosen_engagement = engagement_list.get()
-    eng_num = engagement_list.current()
-
-    return chosen_engagement, eng_num
 
 generate_button = Button(frame3, text="Generálás!", command=lambda: [getTemplate(), getEngagement()])
 generate_button.pack()
 
-def getRemaining():
-    temp_chosen, temp_num = getTemplate()
-    eng_chosen, eng_num = getEngagement()
-    print(subjects[temp_num])
-    print(bodytexts[temp_num])
-    print(manager[eng_num])
-    print(reviewer[eng_num])
-    print(preparer[eng_num])
+
 
 another_button = Button(frame4, text="Print!", command=getRemaining)
 another_button.pack()
