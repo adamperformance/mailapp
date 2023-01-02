@@ -114,33 +114,37 @@ notebook.place(relx=0.5, rely=0.01, anchor=N)
 
 # create the 3 different tabs and the frames that each will contain
 # TAB 1 for the templates
+
 template_frame = Frame(root, relief=RIDGE, borderwidth=5, background="Pink")
 template_frame.place()
 
-frame1 = Frame(template_frame, relief=RIDGE, borderwidth=5, background="green")
-frame1.config(width=1000)
-frame1.grid(row=0, column=0, columnspan=3)
+first_frame = Frame(template_frame, relief=RIDGE, borderwidth=5, background="green")
+first_frame.pack(fill=X)
 
-frame2 = Frame(template_frame, relief=RIDGE, borderwidth=5)
-frame2.grid(row=1, column=0)
+frame1 = Frame(first_frame)
+frame1.pack(fill=X, side=LEFT)
+
+frame2 = Frame(first_frame, relief=RIDGE, borderwidth=5)
+frame2.pack(fill=BOTH, side=RIGHT)
+
 frame3 = Frame(template_frame, relief=RIDGE, borderwidth=5)
-frame3.grid(row=2, column=1)
+frame3.pack()
 frame4 = Frame(template_frame, relief=RIDGE, borderwidth=5)
-frame4.grid(row=3, column=2)
+frame4.pack()
 label = Label(frame1, text="Hello!")
-label.grid(row=0, column=1)
+label.pack()
 
 # TAB 2 for the residency
 residency_frame = Frame(root, relief=RIDGE, borderwidth=5)
-residency_frame.grid()
+residency_frame.pack()
 label = Label(residency_frame, text="Üdvözöllek a reziség egyeztető e-mail generáló programban!")
-label.grid()
+label.pack()
 
 # # TAB 3 for the advisory
 advisory_frame = Frame(root, relief=RIDGE, borderwidth=5)
-advisory_frame.grid()
+advisory_frame.pack()
 label = Label(advisory_frame, text="Tanácsadás generáló programban!")
-label.grid()
+label.pack()
 
 # add tabs to the notepad
 notebook.add(template_frame, text="Template")
@@ -151,9 +155,9 @@ notebook.add(advisory_frame, text="Advisory")
 # fill up the template tab
 
 template_label = Label(frame1, text="Template?")
-template_label.grid(row=1, column=1)
+template_label.pack()
 template_list = ttk.Combobox(frame1, values = templates)
-template_list.grid(row=2, column=0, columnspan=3)
+template_list.pack()
 
 
 engagement_label = Label(frame2, text="Engagement?")
@@ -164,7 +168,6 @@ engagement_list.pack()
 
 generate_button = Button(frame3, text="Generálás!", command=lambda: [getTemplate(), getEngagement()])
 generate_button.pack()
-
 
 
 another_button = Button(frame4, text="Print!", command=getRemaining)
