@@ -56,11 +56,49 @@ def get_values():
 
 
 
-
+# variables that will be accessed later -- should be declared here,
+# should be followed by functions udpating their values
 root = Tk()
 root.title("Residency")
-root.geometry("350x700")
+root.geometry("350x695")
 root.config(background="green")
+
+year = 2015
+sex = ""
+f_name = ""
+l_name = ""
+
+
+def get_year(event):
+    year = event.widget.get()
+
+def get_sex(event):
+    sex = event.widget.get()
+    print(sex)
+
+def get_name(event):
+
+    if event.widget == ".!frame.!labelframe.l_name":
+        ln = event.widget
+        l_name = ln.get()
+    else:
+        fn = event.widget
+        f_name = fn.get()
+
+    
+
+def ppp():
+    print(f_name)
+    print(l_name)
+    print(sex)
+
+# VERY IMPORTANT FUNCTION!!! gives you all the attributes of the event!
+# def eve(event):
+#     for attr in dir(event): 
+#         print(attr)
+#         print(getattr(event, attr))
+# **************************************************
+
 
 f1 = Frame(root, relief=RIDGE, borderwidth=3)
 f1.pack(fill=X)
@@ -69,42 +107,45 @@ f2.pack(fill=X)
 f3 = Frame(root, relief=RIDGE, borderwidth=3)
 f3.pack(fill=X)
 f4 = Frame(root, relief=RIDGE, borderwidth=3)
-f4.pack()
+f4.pack(fill=X)
 f5 = Frame(root, relief=RIDGE, borderwidth=3)
 f5.pack(fill=X)
 f6 = Frame(root, relief=RIDGE, borderwidth=3)
-f6.pack()
+f6.pack(fill=X)
 f7 = Frame(root, relief=RIDGE, borderwidth=3)
-f7.pack()
+f7.pack(fill=X)
 
+
+
+# PERSONAL INFORMATION
 
 pers_info = LabelFrame(f1, text="Personal info")
 pers_info.pack(fill=X)
 
-title_label = Label(pers_info, text="Title")
-title_label.grid(row=0, column=0, sticky=W, padx=10)
+title_label = Label(pers_info, text="Title").grid(row=0, column=0, sticky=W, padx=10)
 title_options = ["Ms.","Mr.", "Mrs."]
-title = Combobox(pers_info, values=title_options, width=13)
+title = Combobox(pers_info, values=title_options, name="title", width=13)
 title.grid(row=0, column=1, sticky=W, padx=10)
-f_name_label = Label(pers_info, text="First Name")
-f_name_label.grid(row=1, column=0, sticky=W, padx=10)
-l_name_label = Label(pers_info, text="Last Name")
-l_name_label.grid(row=2, column=0, sticky=W, padx=10)
-f_name = Entry(pers_info, width=15)
+title.bind("<<ComboboxSelected>>", get_sex)
+f_name_label = Label(pers_info, text="First Name").grid(row=1, column=0, sticky=W, padx=10)
+f_name = Entry(pers_info, width=15, name="f_name")
 f_name.grid(row=1, column=1, padx=10)
-l_name = Entry(pers_info, width=15)
+f_name.bind("<KeyRelease>", get_name)
+l_name_label = Label(pers_info, text="Last Name").grid(row=2, column=0, sticky=W, padx=10)
+l_name = Entry(pers_info, width=15, name="l_name")
 l_name.grid(row=2, column=1, padx=10)
+l_name.bind("<KeyRelease>", get_name)
 
-
+# ASSIGNMENT INFORMATION
 
 assig_info = LabelFrame(f2, text="Assignment Information")
 assig_info.pack(fill=X)
 
-year_label = Label(assig_info, text="Year")
-year_label.grid(row=0, column=0, sticky=W, padx=10)
+year_label = Label(assig_info, text="Year").grid(row=0, column=0, sticky=W, padx=10)
 year_values = [2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025]
-year = Combobox(assig_info, values=year_values, width=15)
-year.grid(row=0, column=1, sticky=W, padx=10)
+year_sel = Combobox(assig_info, values=year_values, width=15, name="year")
+year_sel.grid(row=0, column=1, sticky=W, padx=10)
+year_sel.bind("<<ComboboxSelected>>", get_year)
 
 country_pair = []
 
@@ -115,136 +156,131 @@ def comboselection(Event):
 
 from_country_label = Label(assig_info, text="From country", relief="sunken")
 from_country_label.grid(row=1, column=0, sticky=W, padx=10)
-from_country = Combobox(assig_info, values=countries, width=15)
+from_country = Combobox(assig_info, values=countries, width=15, name="f_country")
 from_country.grid(row=1, column=1)
 from_country.bind("<<ComboboxSelected>>", comboselection)
 to_country_label = Label(assig_info, text="To country", relief="sunken")
 to_country_label.grid(row=2, column=0, sticky=W, padx=10)
-to_country = Combobox(assig_info, values=countries, width=15)
+to_country = Combobox(assig_info, values=countries, width=15, name="t_country")
 to_country.grid(row=2, column=1, padx=10)
 to_country.bind("<<ComboboxSelected>>", comboselection)
 
-assig_label = Label(assig_info, text="Assignment type", relief="groove")
-assig_label.grid(row=3, column=0, sticky=W, padx=10)
-assig_type = Combobox(assig_info, values=type_of_assignment, width=15)
-assig_type.grid(row=3, column=1)
+assig_label = Label(assig_info, text="Assignment type", relief="groove").grid(row=3, column=0, sticky=W, padx=10)
+assig_type = Combobox(assig_info, values=type_of_assignment, width=15, name="assig_type").grid(row=3, column=1)
 
-residency_label = Label(assig_info, text="Residency", relief="groove")
-residency_label.grid(row=4, column=0, sticky=W, padx=10)
-residency = Combobox(assig_info, width=15)
-residency.grid(row=4, column=1)
-residency.bind("<<ComboboxSelected>>", residency.config(values=country_pair))
+residency_label = Label(assig_info, text="Residency", relief="groove").grid(row=4, column=0, sticky=W, padx=10)
+residency = Combobox(assig_info, width=15, values=country_pair, name="residency").grid(row=4, column=1)
 
-# permanent home
-
+# PERMANENT HOME
 
 permanent_home = LabelFrame(f3, text="Permanent Home")
 permanent_home.pack(fill=X)
-ph_from_label = Label(permanent_home, text="From")
-ph_from_label.grid(row=0, column=1)
-ph_to_label = Label(permanent_home, text="To")
-ph_to_label.grid(row=0, column=2)
-ph_home_label = Label(permanent_home, text="Home country")
-ph_home_label.grid(row=1,column=0)
-ph_host_label = Label(permanent_home, text="Host country")
-ph_host_label.grid(row=2,column=0)
+ph_from_label = Label(permanent_home, text="From").grid(row=0, column=1)
+ph_to_label = Label(permanent_home, text="To").grid(row=0, column=2)
+ph_home_label = Label(permanent_home, text="Home country").grid(row=1, column=0, sticky=W, padx=10)
+ph_host_label = Label(permanent_home, text="Host country").grid(row=2, column=0, sticky=W, padx=10)
 
-ph_home_from_date = DateEntry(permanent_home)
-ph_home_from_date.grid(row=1, column=1)
-ph_home_to_date = DateEntry(permanent_home)
-ph_home_to_date.grid(row=1, column=2)
-ph_host_from_date = DateEntry(permanent_home)
-ph_host_from_date.grid(row=2, column=1)
-ph_host_to_date = DateEntry(permanent_home)
-ph_host_to_date.grid(row=2, column=2)
+ph_home_from_date = DateEntry(permanent_home, name="ph_home_from", year=year, month=1, day=1).grid(row=1, column=1)
+ph_home_to_date = DateEntry(permanent_home, name="ph_home_to", year=2022, month=12, day=31).grid(row=1, column=2)
+ph_host_from_date = DateEntry(permanent_home, name="ph_host_from", year=2022, month=1, day=1).grid(row=2, column=1)
+ph_host_to_date = DateEntry(permanent_home, name="ph_host_to", year=2022, month=12, day=31).grid(row=2, column=2)
 
 
-# COVI info
+# COVI
 
-add_info = LabelFrame(f5, text="Addtional info")
+add_info = LabelFrame(f4, text="Addtional info")
 add_info.pack(fill=X)
 
-add_info_left = Frame(add_info)
-# add_info_left.pack(side=LEFT)
-add_info_left.grid(row=0, column=0, padx=10)
-perm_home_label = Label(add_info_left, text="Permanent Home").pack()
-payroll_label = Label(add_info_left, text="Payroll").pack()
-soc_sec_label = Label(add_info_left, text="Soc. Sec.").pack()
+home_label = Label(add_info, text="Home").grid(row=0, column=1)
+host_label = Label(add_info, text="Host").grid(row=0, column=2)
+include_label_COVI = Label(add_info, text="Include?").grid(row=0, column=4)
+spouse_label =  Label(add_info, text="Spouse").grid(row=1, column=0, sticky=W, padx=10)
+children_label =  Label(add_info, text="Children").grid(row=2, column=0, sticky=W, padx=10)
+payroll_label = Label(add_info, text="Payroll").grid(row=3, column=0, sticky=W, padx=10)
+soc_sec_label = Label(add_info, text="Soc. Sec.").grid(row=4, column=0, sticky=W, padx=10)
+assets_label =  Label(add_info, text="Assets").grid(row=5, column=0, sticky=W, padx=10)
+
+spouse_home = Radiobutton(add_info, name="spouse_home").grid(row=1, column=1, padx=10)
+spouse_host = Radiobutton(add_info, name="spouse_host").grid(row=1, column=2, padx=10)
+
+include_butt_COVI = Checkbutton(add_info, name="include_COVI").grid(row=1, column=4)
+
+children_home = Checkbutton(add_info).grid(row=2, column=1, padx=10)
+children_host = Checkbutton(add_info).grid(row=2, column=2, padx=10)
+
+payroll_home = Checkbutton(add_info).grid(row=3, column=1, padx=10)
+payroll_host = Checkbutton(add_info).grid(row=3, column=2, padx=10)
+soc_sec_home = Checkbutton(add_info).grid(row=4, column=1, padx=10)
+soc_sec_host = Checkbutton(add_info).grid(row=4, column=2, padx=10)
+assets_home = Checkbutton(add_info).grid(row=5, column=1, padx=10)
+assets_host = Checkbutton(add_info).grid(row=5, column=2, padx=10)
+
+child_num_label = Label(add_info, text="No. of children").grid(row=1, column=3, padx=10)
+child_num = Entry(add_info, width=10).grid(row=2, column=3, padx=10)
+
+family_move_label = Label(add_info, text="Family move").grid(row=3,column=3, padx=10)
+family_move_date = DateEntry(add_info, width=8).grid(row=4, column=3, padx=10)
+
+# HABITUAL ABODE
+
+hab_abod = LabelFrame(f5, text="Addtional info")
+hab_abod.pack(fill=X)
+
+days_home_label = Label(hab_abod, text="Days in Home country").grid(row=0, column=0, sticky=W, padx=10)
+days_host_label = Label(hab_abod, text="Days in Host country").grid(row=1, column=0, sticky=W, padx=10)
+days_home = Entry(hab_abod, width=10).grid(row=0, column=1, padx=10)
+days_host = Entry(hab_abod, width=10).grid(row=1, column=1, padx=10)
+
+include_label_HA = Label(hab_abod, text="Include?").grid(row=0, column=2, padx=10)
+include_butt_COVI = Checkbutton(hab_abod).grid(row=1, column=2, padx=10)
 
 
-add_info_center = Frame(add_info)
-# add_info_center.pack(side=LEFT)
-add_info_center.grid(row=0, column=1, padx=10)
-home_label = Label(add_info_center, text="Home")
-home_label.pack()
-
-
-add_info_right = Frame(add_info)
-# add_info_right.pack(side=LEFT)
-add_info_right.grid(row=0, column=2, padx=10)
-host_label = Label(add_info_right, text="Host")
-host_label.pack()
-
-perm_home_home = Checkbutton(add_info_center).pack()
-perm_home_host = Checkbutton(add_info_right).pack()
-
-payroll_home = Checkbutton(add_info_center).pack()
-payroll_host = Checkbutton(add_info_right).pack()
-soc_sec_home = Checkbutton(add_info_center).pack()
-soc_sec_host = Checkbutton(add_info_right).pack()
-
-# family_info = LabelFrame(f2, text="Family Information")
-# family_info.pack(fill=X)
-
-# married_label = Label(family_info, text="Marital status")
-# married_label.pack()
-# married_info = StringVar()
-# married_y = Radiobutton(family_info, variable=married_info, value="Y", text="Yes")
-# married_y.pack()
-# married_n = Radiobutton(family_info, variable=married_info, value="N", text="No")
-# married_n.pack()
-# children_label = Label(family_info, text="Number of children")
-# children_label.pack()
-# num_children = Entry(family_info)
-# num_children.pack()
-# fam_move_label = Label(family_info, text="Family move date")
-# fam_move_label.pack()
-# fam_move_date = DateEntry(family_info)
-# fam_move_date.pack()
-
-
-# date_label1 = Label(f4, text="Start date").pack(side=LEFT)
+# date_label1 = Label(f4, text="Start date")
 # start_date = DateEntry(f4)
-# start_date.pack(side=LEFT)
+# 
 
-# date_label2 = Label(f4, text="End date").pack(side=LEFT)
-# end_date = DateEntry(f4).pack(side=LEFT)
-
-
+# date_label2 = Label(f4, text="End date")
+# end_date = DateEntry(f4)
 
 
+# TAXATION
+taxation_info = LabelFrame(f6, text="Taxation")
+taxation_info.pack(fill=X)
 
-home_comp_info = LabelFrame(f6, text="Home country info")
-home_comp_info.pack()
-dtt_label = Label(home_comp_info, text="Calendar year or any 12 month period?")
-dtt_label.pack()
-dtt = ["calendar year", "any 12 months"]
+to_from = ["up to","from"]
+yes_no = ["yes","no"]
+dtt = ["calendar", "12 months"]
 
-dtt_type = ""
+include_label_TAX = Label(taxation_info, text="Include?").grid(row=0, column=2, padx=10)
+include_butt_TAX = Checkbutton(taxation_info).grid(row=1, column=2, padx=10)
 
+date_to_label = Label(taxation_info, text="Date").grid(row=3, column=0, sticky=W, padx=10)
+to_from_label = Label(taxation_info, text="Up to/From").grid(row=4, column=0, sticky=W, padx=10)
+days_nonrezi_label = Label(taxation_info, text="Exceed 183 days?").grid(row=1, column=0, sticky=W, padx=10)
+dtt_type_label = Label(taxation_info, text="DTT Type").grid(row=2, column=0, sticky=W, padx=10)
 
-dtt_choice = Combobox(home_comp_info, values = dtt)
-dtt_choice.pack()
-dtt_choice.bind("<<ComboboxSelected>>", comboselection)
+days_nonrezi_entry = Combobox(taxation_info, values=yes_no, width=10).grid(row=1, column=1, padx=10)
+dtt_type = Combobox(taxation_info, values = dtt, width=10).grid(row=2, column=1, padx=10)
+date_to = DateEntry(taxation_info, width=10).grid(row=3, column=1, padx=10)
+to_from_sel = Combobox(taxation_info, values=to_from, width=10).grid(row=4, column=1, padx=10)
 
-home_days_label = Label(home_comp_info, text=dtt_type)
-home_days_label.pack()
+# dtt_label = Label(taxation_info, text="Calendar year or any 12 month period?")
+# dtt_label.pack()
+# dtt = ["calendar year", "any 12 months"]
+# dtt_type = ""
+
+# dtt_choice = 
+# dtt_choice.pack()
+# dtt_choice.bind("<<ComboboxSelected>>", comboselection)
+
+# home_days_label = Label(taxation_info, text=dtt_type)
+# home_days_label.pack()
 
 #calendar days or any 12 month period?
 
 
 
-button = Button(f7, text="Generate", command=get_values)
-button.pack()
+button = Button(f7, text="Generate", command=ppp)
+button.pack(fill=BOTH)
 
 root.mainloop()
