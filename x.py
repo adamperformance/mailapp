@@ -86,12 +86,6 @@ def get_name(event):
         f_name = fn.get()
 
     
-
-def ppp():
-    print(f_name)
-    print(l_name)
-    print(sex)
-
 # VERY IMPORTANT FUNCTION!!! gives you all the attributes of the event!
 # def eve(event):
 #     for attr in dir(event): 
@@ -104,7 +98,7 @@ f1 = Frame(root, relief=RIDGE, borderwidth=3)
 f1.pack(fill=X)
 f2 = Frame(root, relief=RIDGE, borderwidth=3)
 f2.pack(fill=X)
-f3 = Frame(root, relief=RIDGE, borderwidth=3)
+f3 = Frame(root, relief=RIDGE, borderwidth=3, name="f3")
 f3.pack(fill=X)
 f4 = Frame(root, relief=RIDGE, borderwidth=3)
 f4.pack(fill=X)
@@ -148,11 +142,28 @@ year_sel.grid(row=0, column=1, sticky=W, padx=10)
 year_sel.bind("<<ComboboxSelected>>", get_year)
 
 country_pair = []
+cp = StringVar()
+cp = ["",""]
 
-def comboselection(Event):
-    country_pair.append(Event.widget.get())
+def comboselection(event):
+    if len(country_pair) < 2:
+        country_pair.append(event.widget.get())
+    else:
+        print(event.widget)
+        if event.widget == root.nametowidget(".!frame2.!labelframe.f_country"):
+            country_pair[0] = event.widget.get()
+        elif event.widget == root.nametowidget(".!frame2.!labelframe.t_country"):
+            country_pair[1] = event.widget.get()
+    
     print(country_pair)
 
+def combobox_values():
+    for i in range(len(country_pair)):
+        cp[i] = country_pair[i]
+    return cp
+
+def db_refresh(event):
+    residency['values'] = combobox_values()
 
 from_country_label = Label(assig_info, text="From country", relief="sunken")
 from_country_label.grid(row=1, column=0, sticky=W, padx=10)
@@ -169,11 +180,15 @@ assig_label = Label(assig_info, text="Assignment type", relief="groove").grid(ro
 assig_type = Combobox(assig_info, values=type_of_assignment, width=15, name="assig_type").grid(row=3, column=1)
 
 residency_label = Label(assig_info, text="Residency", relief="groove").grid(row=4, column=0, sticky=W, padx=10)
-residency = Combobox(assig_info, width=15, values=country_pair, name="residency").grid(row=4, column=1)
+residency = Combobox(assig_info, width=15, name="residency")
+residency.grid(row=4, column=1)
+residency["values"] = combobox_values()
+residency.bind('<Button>', lambda event: db_refresh(event))
+
 
 # PERMANENT HOME
 
-permanent_home = LabelFrame(f3, text="Permanent Home")
+permanent_home = LabelFrame(f3, text="Permanent Home", name="ph_label")
 permanent_home.pack(fill=X)
 ph_from_label = Label(permanent_home, text="From").grid(row=0, column=1)
 ph_to_label = Label(permanent_home, text="To").grid(row=0, column=2)
@@ -280,7 +295,7 @@ to_from_sel = Combobox(taxation_info, values=to_from, width=10).grid(row=4, colu
 
 
 
-button = Button(f7, text="Generate", command=ppp)
+button = Button(f7, text="Generate")
 button.pack(fill=BOTH)
 
 root.mainloop()
