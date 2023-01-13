@@ -7,7 +7,7 @@ from customtkinter import *
 
 
 class Personal_Info(CTkFrame):
-    def __init__(self, root=None, title_tk="", f_name_tk="", l_name_tk=""):
+    def __init__(self, root=None, title_tk="", f_name_tk="", l_name_tk="", engagement_tk=""):
         # super().__init__(root)
         self.frame = CTkFrame(root)
         # self.frame.pack(fill=X)
@@ -28,11 +28,17 @@ class Personal_Info(CTkFrame):
         self.l_name = CTkEntry(self.frame, width=100, textvariable=l_name_tk)
         self.l_name.grid(row=2, column=1, padx=10, pady=2)
 
+        self.eng_label = CTkLabel(self.frame, text="Engagement")
+        self.eng_label.grid(row=3, column=0, sticky=W, padx=10)
+        self.engagement = CTkEntry(self.frame, width=100, textvariable=engagement_tk)
+        self.engagement.grid(row=3, column=1, padx=10, pady=2)
+
     def get_value(self):
         print(self.title.get())
         print(self.f_name.get())
         print(self.l_name.get())
-
+        print(self.engagement.get())
+        return self.title.get(), self.f_name.get(), self.f_name.get(), self.engagement.get()
 
 class Assignment_Info(CTkFrame):
     def __init__(self, root=None, countries=[]):
@@ -151,7 +157,7 @@ class PermanentHome_Info(CTkFrame):
 class COVI_Info(CTkFrame):
     def __init__(self, root=None):
         self.add_info = CTkFrame(root)
-        self.add_info.pack(pady=3)
+        # self.add_info.pack(pady=3)
 
         self.COVIlabel = CTkLabel(self.add_info, text="COVI", font=(None, 30))
         self.COVIlabel.grid(row=0, column=0, rowspan=5, padx=5, pady=3)
@@ -236,7 +242,7 @@ class COVI_Info(CTkFrame):
 class HA_Info(CTkFrame):
     def __init__(self, root=None):
         self.hab_abod = CTkFrame(root)
-        self.hab_abod.pack(side=LEFT, fill=Y, padx=3, pady=3)
+        # self.hab_abod.pack(side=LEFT, fill=Y, padx=3, pady=3)
 
         self.HAlabel = CTkLabel(self.hab_abod, text="HA", font=(None, 30))
         self.HAlabel.grid(row=0, column=0, columnspan=2, padx=3, pady=2)
@@ -256,7 +262,7 @@ class HA_Info(CTkFrame):
 class Taxation_Info(CTkFrame):
     def __init__(self, root=None):
         self.taxation_info = CTkFrame(root)
-        self.taxation_info.pack(pady=3)
+        # self.taxation_info.pack(pady=3)
 
         self.TAXlabel = CTkLabel(self.taxation_info, text="TAXATION", font=(None, 30))
         self.TAXlabel.grid(row=0, column=0, columnspan=2, padx=3, pady=2)

@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 # variables from program
@@ -21,6 +20,12 @@ soc_sec_COVI = "soc_sec_home"
 assets_COVI = "assets_home"
 family_move = "3/1/22"
 child_number = "4"
+ch = ""
+if int(child_number) == 1:
+    ch = "child"
+if int(child_number) > 1:
+    ch = "children"
+
 tax_date = ""
 host_days = "300"
 home_days = "65"
@@ -49,18 +54,20 @@ else:
 
 his_her = ""
 he_she = ""
+him_her = ""
 
 if title == "Mr.":
     his_her = "his"
     he_she = "he"
+    him_her = "him"
 else:
     his_her = "her"
     he_she = "she"
+    him_her = "her"
 
 
-# Section 1 - introduction
+# SECTION 1 - introduction
 
- 
 introduction = f"""Dear XY! 
 
 Hope this e-mail finds you well. 
@@ -69,7 +76,7 @@ We are contacting you regarding one of {engagement}'s assignee, {full_name}."""
 
 # print(introduction)
 
-# Section 2 - HU internal
+# SECTION 2 - HU internal stuff
 
 internal = f"""According to local legislation {last_name} is considered a Hungarian tax resident in {year}.
 
@@ -78,7 +85,7 @@ Should {he_she} qualify as a tax resident in {other_country} as well for the sam
 
 # print(internal)
 
-# PH
+# SECTION 3 - Permanent Home
 
 PH_option = ""
 
@@ -111,3 +118,120 @@ permanent_home = f"""Based on the information available to us {last_name} had a 
 
 print(permanent_home)
 
+
+
+# SECTION 4
+
+COVI_matrix = [spouse_COVI, children_COVI, payroll_COVI, soc_sec_COVI, assets_COVI]
+
+    # Step 1 - figure out family
+family_setup = ""
+
+if spouse_COVI != "" and (child_number == "" or child_number == "0"):
+    family_setup = "spouse"
+    if spouse_COVI == "spouse_home":
+        s = f"stayed in {home_country}"
+        c = f"resided in {home_country} as well"
+    elif spouse_COVI == "spouse_host":
+        s = f"accompanied {him_her} to {host_country}"
+        c = f"shifted to {host_country} as of the move date of {him_her} {family_setup} on {family_move}"
+elif spouse_COVI != "" and child_number != "" and child_number != "0":
+    family_setup = f"spouse and {ch}"
+    if spouse_COVI == "spouse_home" and children_COVI == "children_home":
+        s = f"stayed in {home_country}"
+        c = f"resided in {home_country} as well"
+    elif spouse_COVI == "spouse_host" and children_COVI == "children_host":
+        s = f"accompanied {him_her} to {host_country}"
+        c = f"shifted to {host_country} as of the move date of {his_her} {family_setup} on {family_move}"
+elif spouse_COVI == "" and child_number != "" and child_number != "0":
+    family_setup == f"{ch}"
+
+COVI_text = f"As {his_her} {family_setup} {s}, {his_her} center of vital interests {c}." 
+
+print(COVI_text)
+# set up checks --> if any of the COVI_matrix variables is "", exclude that from the final text
+
+
+# SECTION 5
+
+
+
+# SECTION 6 - Habitual Abode
+
+habitual_abode = f"As {last_name} spent {home_days} days in {home_country} and {host_days} days in {host_country}, his habitual abode resided in {residency}."
+
+print(habitual_abode)
+
+# SECTION 7 - Residency Conclusion
+
+residency_conclusion = f"In line with the above we are of the opinion that {last_name} should be considered a treaty resident in {residency}. Please confirm that you argee with our approach."
+
+# SECTION 8 - TAXATION
+
+tax_matrix = [home_country, host_country, residency, exceed183]
+
+x = ""
+
+if tax_matrix[1] == "Hungary":
+    if tax_matrix[2] == "Hungary":
+        if tax_matrix[3] == "No":
+            x = f"""{his_her} income allocated to {his_her} {home_country} workdays could only be exempted from
+            taxation in {host_country} if {engagement} {home_country} qualifies as {last_name}'s
+            economic employer
+            """
+        else:
+            x = f"""as {his_her} physical presence in {home_country} exceeded a 183 days in the CALENDAR YEAR
+            we understand that the part of {his_her} income relating to {his_her} workdays in {home_country}
+            should be taxable in {home_country} and exempted from taxation {host_country}.
+            """
+    else:
+        if tax_matrix[3] == "No":
+            x = f"""{his_her} income allocated to {his_her} {host_country} workdays could only be exempted from
+            taxation in {host_country} if {engagement} {home_country} qualifies as {last_name}'s
+            economic employer
+            """
+        else:
+            x = f"""as {his_her} physical presence in {host_country} exceeded a 183 days in the CALENDAR YEAR
+            we understand that the part of {his_her} income relating to {his_her} workdays in {host_country}
+            should be taxable in {home_country}.
+            """
+else:
+    if tax_matrix[2] == "Hungary":
+        if tax_matrix[3] == "No":
+            x = f"""{his_her} income allocated to {his_her} {host_country} workdays could only be exempted from
+            taxation in {home_country} if {engagement} {host_country} qualifies as {last_name}'s
+            economic employer
+            """
+        else:
+            x = f"""as {his_her} physical presence in {host_country} exceeded a 183 days in the CALENDAR YEAR
+            we understand that the part of {his_her} income relating to {his_her} workdays in {host_country}
+            should be taxable in {host_country} and exempted from taxation {home_country}.
+            """
+    else:
+        if tax_matrix[3] == "No":
+            x = f"""{his_her} income allocated to {his_her} {home_country} workdays could only be exempted from
+            taxation in {home_country} if {engagement} {home_country} does not qualify as {last_name}'s
+            economic employer
+            """
+        else:
+            x = f"""as {his_her} physical presence in {home_country} exceeded a 183 days in the CALENDAR YEAR
+            we understand that the part of {his_her} income relating to {his_her} workdays in {home_country}
+            should be taxable in {home_country}."""
+    
+
+
+#less than 183 days
+    #HU is Host and FO rezi
+x = f"""the part of {his_her} income allocated to {his_her} workdays in {host_country} could only 
+    be exempted from taxation in {host_country} if {engagement} {host_country} does not qualify as 
+    the economic employer of {last_name}"""
+
+    #HU is host and HU rezi
+y = f"""the part of {his_her} income allocated to {his_her} workdays in {host_country} could only 
+    be exempted from taxation in {host_country} if {engagement} {host_country} does not qualify as 
+    the economic employer of {last_name}"""
+
+# print(x)
+
+
+# SECTION 9 - Closing

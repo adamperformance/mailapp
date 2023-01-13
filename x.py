@@ -39,7 +39,6 @@ for country in c_tries:
     else:
         countries.append(c_tries[country])
 
-
 type_of_assignment = ["international assignment", "localization"]
 
 # VERY IMPORTANT FUNCTION!!! gives you all the attributes of the event!
@@ -161,8 +160,6 @@ def comboselection(event):
                 host_country = event.widget.get()
         
         print(country_pair)
-
-
 
 
 def combobox_values():
