@@ -124,7 +124,6 @@ class Assignment_Info(CTkFrame):
                     data.append(country)
             self.to_country.configure(values=data)
 
-
 class PermanentHome_Info(CTkFrame):
     def __init__(self, root=None):
         self.permanent_home = CTkFrame(root)
@@ -152,7 +151,6 @@ class PermanentHome_Info(CTkFrame):
         self.ph_host_from_date.grid(row=2, column=2, padx=10)
         self.ph_host_to_date = DateEntry(self.permanent_home, variable=self.host_t, year=2022, month=12, day=31)
         self.ph_host_to_date.grid(row=2, column=3, padx=10)
-
 
 class COVI_Info(CTkFrame):
     def __init__(self, root=None):
@@ -238,7 +236,6 @@ class COVI_Info(CTkFrame):
     def onClick(self, widget):
         print(widget)
 
-
 class HA_Info(CTkFrame):
     def __init__(self, root=None):
         self.hab_abod = CTkFrame(root)
@@ -257,7 +254,6 @@ class HA_Info(CTkFrame):
         self.days_home.grid(row=1, column=1, padx=5, pady=2)
         self.days_host = CTkEntry(self.hab_abod, textvariable=self.host_days, width=60)
         self.days_host.grid(row=2, column=1, padx=5, pady=2)
-
 
 class Taxation_Info(CTkFrame):
     def __init__(self, root=None):
