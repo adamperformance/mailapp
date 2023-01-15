@@ -10,7 +10,7 @@ class Personal_Info(CTkFrame):
     def __init__(self, root=None, title_tk="", f_name_tk="", l_name_tk="", engagement_tk=""):
         # super().__init__(root)
         self.frame = CTkFrame(root)
-        # self.frame.pack(fill=X)
+        self.frame.pack(fill=Y, side=LEFT, padx=3, pady=3)
 
         self.title_label = CTkLabel(self.frame, text="Title")
         self.title_label.grid(row=0, column=0, sticky=W, padx=10)
@@ -143,13 +143,13 @@ class PermanentHome_Info(CTkFrame):
         self.host_f.set("")
         self.host_t = StringVar()
         self.host_t.set("")
-        self.ph_home_from_date = DateEntry(self.permanent_home, variable=self.home_f, year=2022, month=1, day=1)
+        self.ph_home_from_date = DateEntry(self.permanent_home, textvariable=self.home_f)
         self.ph_home_from_date.grid(row=1, column=2, padx=10)
-        self.ph_home_to_date = DateEntry(self.permanent_home, variable=self.home_t, year=2022, month=12, day=31)
+        self.ph_home_to_date = DateEntry(self.permanent_home, textvariable=self.home_t)
         self.ph_home_to_date.grid(row=1, column=3, padx=10)
-        self.ph_host_from_date = DateEntry(self.permanent_home, variable=self.host_f, year=2022, month=1, day=1)
+        self.ph_host_from_date = DateEntry(self.permanent_home, textvariable=self.host_f)
         self.ph_host_from_date.grid(row=2, column=2, padx=10)
-        self.ph_host_to_date = DateEntry(self.permanent_home, variable=self.host_t, year=2022, month=12, day=31)
+        self.ph_host_to_date = DateEntry(self.permanent_home, textvariable=self.host_t)
         self.ph_host_to_date.grid(row=2, column=3, padx=10)
 
 class COVI_Info(CTkFrame):
@@ -159,62 +159,62 @@ class COVI_Info(CTkFrame):
 
         self.COVIlabel = CTkLabel(self.add_info, text="COVI", font=(None, 30))
         self.COVIlabel.grid(row=0, column=0, rowspan=5, padx=5, pady=3)
-        self.home_label = CTkLabel(self.add_info, text="Home").grid(row=0, column=2, sticky=W, padx=10)
+        self.home_label = CTkLabel(self.add_info, text="Home").grid(row=0, column=2, sticky=W, padx=2)
         self.host_label = CTkLabel(self.add_info, text="Host")
-        self.host_label.grid(row=0, column=3, sticky=W, padx=10)
+        self.host_label.grid(row=0, column=3, sticky=W, padx=2)
         self.spouse_label =  CTkLabel(self.add_info, text="Spouse")
-        self.spouse_label.grid(row=1, column=1, sticky=W, padx=10)
-        self.children_label =  CTkLabel(self.add_info, text="Children").grid(row=2, column=1, sticky=W, padx=10)
-        self.payroll_label = CTkLabel(self.add_info, text="Payroll").grid(row=3, column=1, sticky=W, padx=10)
-        self.soc_sec_label = CTkLabel(self.add_info, text="Soc. Sec.").grid(row=4, column=1, sticky=W, padx=10)
-        self.assets_label =  CTkLabel(self.add_info, text="Assets").grid(row=5, column=1, sticky=W, padx=10)
+        self.spouse_label.grid(row=1, column=1, sticky=W, padx=5)
+        self.children_label =  CTkLabel(self.add_info, text="Children").grid(row=2, column=1, sticky=W, padx=5)
+        self.payroll_label = CTkLabel(self.add_info, text="Payroll").grid(row=3, column=1, sticky=W, padx=5)
+        self.soc_sec_label = CTkLabel(self.add_info, text="Soc. Sec.").grid(row=4, column=1, sticky=W, padx=5)
+        self.assets_label =  CTkLabel(self.add_info, text="Assets").grid(row=5, column=1, sticky=W, padx=5)
 
         self.spouse = StringVar()
         self.spouse.set("")
-        self.spouse_home = CTkCheckBox(self.add_info, variable=self.spouse, text="", onvalue="home", offvalue="", command=lambda: [self.reset(), self.onClick(self.spouse_home)])
-        self.spouse_home.grid(row=1, column=2, padx=10)
-        self.spouse_host = CTkCheckBox(self.add_info, variable=self.spouse, text="", onvalue="host", offvalue="", command=self.reset)
-        self.spouse_host.grid(row=1, column=3, padx=10)
+        self.spouse_home = CTkCheckBox(self.add_info, variable=self.spouse, text=" ", onvalue="home", offvalue="", command=lambda: [self.reset()])
+        self.spouse_home.grid(row=1, column=2, padx=2, sticky=NSEW)
+        self.spouse_host = CTkCheckBox(self.add_info, variable=self.spouse, text=" ", onvalue="host", offvalue="", command=self.reset)
+        self.spouse_host.grid(row=1, column=3, padx=2, sticky=NSEW)
 
         self.children = StringVar()
         self.children.set("")
-        self.children_home = CTkRadioButton(self.add_info, variable=self.children, text="", value="home")
-        self.children_home.grid(row=2, column=2, padx=10)
-        self.children_host = CTkRadioButton(self.add_info, variable=self.children, text="", value="host")
-        self.children_host.grid(row=2, column=3, padx=10)
+        self.children_home = CTkCheckBox(self.add_info, variable=self.children, text=" ", onvalue="home", offvalue="", command=lambda:[self.reset1()])
+        self.children_home.grid(row=2, column=2, padx=2)
+        self.children_host = CTkCheckBox(self.add_info, variable=self.children, text=" ", onvalue="host", offvalue="", command=self.reset1)
+        self.children_host.grid(row=2, column=3, padx=2)
 
         self.payroll = StringVar()
         self.payroll.set("")
-        self.payroll_home = CTkRadioButton(self.add_info, variable=self.payroll, text="", value="home")
-        self.payroll_home.grid(row=3, column=2, padx=10)
-        self.payroll_host = CTkRadioButton(self.add_info, variable=self.payroll, text="", value="host")
-        self.payroll_host.grid(row=3, column=3, padx=10)
+        self.payroll_home = CTkCheckBox(self.add_info, variable=self.payroll, text=" ", onvalue="home", offvalue="", command=lambda:[self.reset2()])
+        self.payroll_home.grid(row=3, column=2, padx=2)
+        self.payroll_host = CTkCheckBox(self.add_info, variable=self.payroll, text=" ", onvalue="host", offvalue="", command=self.reset2)
+        self.payroll_host.grid(row=3, column=3, padx=2)
 
         self.socsec = StringVar()
         self.socsec.set("")
-        self.soc_sec_home = CTkRadioButton(self.add_info, variable=self.socsec, text="", value="home")
-        self.soc_sec_home.grid(row=4, column=2, padx=10)
-        self.soc_sec_host = CTkRadioButton(self.add_info, variable=self.socsec, text="", value="host")
-        self.soc_sec_host.grid(row=4, column=3, padx=10)
+        self.soc_sec_home = CTkCheckBox(self.add_info, variable=self.socsec, text=" ", onvalue="home", offvalue="", command=lambda:[self.reset3()])
+        self.soc_sec_home.grid(row=4, column=2, padx=2)
+        self.soc_sec_host = CTkCheckBox(self.add_info, variable=self.socsec, text=" ", onvalue="host", offvalue="", command=self.reset3)
+        self.soc_sec_host.grid(row=4, column=3, padx=2)
 
         self.assets = StringVar()
         self.assets.set("")
-        self.assets_home = CTkRadioButton(self.add_info, variable=self.assets, text="", value="home")
-        self.assets_home.grid(row=5, column=2, padx=10)
-        self.assets_host = CTkRadioButton(self.add_info, variable=self.assets, text="", value="host")
-        self.assets_host.grid(row=5, column=3, padx=10)
+        self.assets_home = CTkCheckBox(self.add_info, variable=self.assets, text=" ", onvalue="home", offvalue="", command=lambda:[self.reset4()])
+        self.assets_home.grid(row=5, column=2, padx=2)
+        self.assets_host = CTkCheckBox(self.add_info, variable=self.assets, text=" ", onvalue="host", offvalue="", command=self.reset4)
+        self.assets_host.grid(row=5, column=3, padx=2)
 
         self.child_number = StringVar()
         self.child_number.set("")
         self.child_num_label = CTkLabel(self.add_info, text="No. of children").grid(row=1, column=4, padx=10)
         self.child_num = CTkEntry(self.add_info, textvariable=self.child_number, width=75)
-        self.child_num.grid(row=2, column=4, padx=10)
+        self.child_num.grid(row=2, column=4, padx=2)
 
         self.family_move = StringVar()
         self.family_move.set("")
         self.family_move_label = CTkLabel(self.add_info, text="Family move").grid(row=3,column=4, padx=10)
         self.family_move_date = DateEntry(self.add_info, textvariable=self.family_move, width=8)
-        self.family_move_date.grid(row=4, column=4, padx=10)
+        self.family_move_date.grid(row=4, column=4, padx=2)
 
     def get_value(self):
         print(self.spouse.get())
@@ -224,17 +224,45 @@ class COVI_Info(CTkFrame):
         print(self.assets.get())
 
     def reset(self):
-
         if self.spouse.get() == "home":
             self.spouse_host.deselect()
             self.spouse_home.select()
         elif self.spouse.get() == "host":
             self.spouse_home.deselect()
             self.spouse_host.select()
-        print(self.spouse.get())
 
-    def onClick(self, widget):
-        print(widget)
+    def reset1(self):
+        if self.children.get() == "home":
+            self.children_host.deselect()
+            self.children_home.select()
+        elif self.children.get() == "host":
+            self.children_home.deselect()
+            self.children_host.select()
+
+    def reset2(self):
+        if self.payroll.get() == "home":
+            self.payroll_host.deselect()
+            self.payroll_home.select()
+        elif self.payroll.get() == "host":
+            self.payroll_home.deselect()
+            self.payroll_host.select()
+
+    def reset3(self):
+        if self.socsec.get() == "home":
+            self.soc_sec_host.deselect()
+            self.soc_sec_home.select()
+        elif self.socsec.get() == "host":
+            self.soc_sec_home.deselect()
+            self.soc_sec_host.select()
+
+    def reset4(self):
+        if self.assets.get() == "home":
+            self.assets_host.deselect()
+            self.assets_home.select()
+        elif self.assets.get() == "host":
+            self.assets_home.deselect()
+            self.assets_host.select()
+
 
 class HA_Info(CTkFrame):
     def __init__(self, root=None):

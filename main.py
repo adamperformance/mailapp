@@ -8,6 +8,8 @@ from docx import Document
 from openpyxl.workbook import Workbook
 from openpyxl import load_workbook
 from residencyGUI import Personal_Info, Assignment_Info, PermanentHome_Info, COVI_Info, HA_Info, Taxation_Info
+from residencyFunct import basic_variables, permhome_variables, introduction, internal
+from residencyFunct import perm_home, covi_family, covi_other, hab_abode, resid_concl, taxation, closing
 from templateGUI import Template_Choice, Template_Frame, Template_Time
 from templateFunct import manager, reviewer, preparer, emails, eng_name, countries, engagement_teams
 from templateFunct import templates, templates1, subjects, subjects1, bodytexts, bodytexts1
@@ -41,9 +43,7 @@ def pri(*args):
             t = team["team"]
             template_setup.man_selected = t["manager"]
             template_setup.rev_selected = t["reviewer"]
-            template_setup.prep_selected = t["preparer"]   
-
-    
+            template_setup.prep_selected = t["preparer"]
 
 set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -64,7 +64,7 @@ notebook.add("Template")
 notebook.add("Residency")
 notebook.add("Advisory")
 
-# Template tab 
+# Template tab
 
 #make combo boxes searchable
 template_choice = Template_Choice(notebook.tab("Template"))
@@ -82,19 +82,8 @@ template_button.pack(fill=X)
 
 
 # Residency tab
-frame1 = CTkFrame(notebook.tab("Residency"))
-frame1.pack(pady=3)
-frame2 = CTkFrame(notebook.tab("Residency"))
-frame2.pack(fill=X, pady=3)
 
-residency_personal = Personal_Info(frame1)
-residency_personal.frame.pack(fill=Y, side=LEFT, padx=3, pady=3)
-
-residency_assignment = Assignment_Info(frame1, countries=countries)
-
-residency_PH = PermanentHome_Info(notebook.tab("Residency"))
-
-
+# whether to include the COVI/HA/TAXATION parts
 def incl(obj):
     if obj == root.nametowidget(".!ctktabview.!ctkframe2.!ctkframe2.!ctkcheckbox"):
         if check_COVI.get() == "yes":
@@ -119,8 +108,93 @@ def incl(obj):
             resid_taxation.taxation_info.pack_forget()
         elif check_taxation.get() == "no" and check_habit.get() == "yes":
             resid_taxation.taxation_info.pack_forget()
-    print(obj)
 
+
+# the function that is called when the button is pressed - this initiates all the further
+# functions that run the residency determination
+def collection():
+
+    # get the basic information (name, engagement, sex)
+    title = residency_personal.title.get()
+    f_name = residency_personal.f_name.get()
+    l_name = residency_personal.l_name.get()
+    engagement = residency_personal.engagement.get()
+    full_name, last_name, he_she, his_her, him_her = basic_variables(title, f_name, l_name)
+
+    # get the assignment info (from/to/residency)
+    year = residency_assignment.year.get()
+    home = residency_assignment.home.get()
+    host = residency_assignment.host.get()
+    assigtype = residency_assignment.asstype.get()
+    residency = residency_assignment.residency.get()
+    other_country = ""
+    if home == "Hungary":
+        other_country = host
+    elif host == "Hungary":
+        other_country = home
+
+    # info related to perm. home
+    PH_home_f = residency_PH.home_f.get()
+    PH_home_t = residency_PH.home_t.get()
+    PH_host_f = residency_PH.host_f.get()
+    PH_host_t = residency_PH.host_t.get()
+
+    homeF, homeT, hostF, hostT = permhome_variables(PH_home_f,PH_home_t,PH_host_f,PH_host_t)
+
+    #if covi/etc checked --> than execute this
+    if check_COVI.get() == "yes":
+        spouse = residency_COVI.spouse.get()
+        children = residency_COVI.children.get()
+        payroll = residency_COVI.payroll.get()
+        socsec = residency_COVI.socsec.get()
+        assets = residency_COVI.assets.get()
+        child_number = residency_COVI.child_number.get()
+        family_move = residency_COVI.family_move.get()
+
+
+    # x = introduction(engagement, full_name)
+    # y = internal(last_name, year, he_she, other_country)
+    # z = perm_home(PH_home_f, PH_home_t, PH_host_f, PH_host_t, last_name, his_her, home, host, assigtype)
+    # a = covi_family(spouse, children, child_number, family_move, his_her, him_her, home, host)
+    # b = covi_other(payroll, socsec, assets, he_she, his_her, home, host)
+
+    # print(x+y+z+a)
+
+    if check_HA.get() == "yes":
+        home_days = residency_HA.home_days.get()
+        host_days = residency_HA.host_days.get()
+        hab_abode(last_name, home_days, host_days, home, host, residency)
+
+    resid_concl(last_name, residency)
+
+    if check_TAX.get() == "yes":
+        exceed = resid_taxation.exceed183.get()
+        dtt = resid_taxation.dtt_type.get()
+        tax_date = resid_taxation.tax_date.get()
+        up_from = resid_taxation.up_from.get()
+    taxation(last_name, his_her, engagement, home, host, residency, exceed)
+    # construct_email(full_name, last_name, engagement)
+    # get info from the additional parts
+
+    closing()
+
+    # CALL THE FUNCTION THAT WILL CREATE THE FINAL E-MAIL
+    # THAT FUNCTION SHOULD INCLUDE ALL THE "introduction", etc. parts from residFunc
+
+def construct_email():
+    pass
+
+frame1 = CTkFrame(notebook.tab("Residency"))
+frame1.pack(pady=3)
+frame2 = CTkFrame(notebook.tab("Residency"))
+frame2.pack(fill=X, pady=3)
+
+# create the 3 basic parts of the form
+residency_personal = Personal_Info(frame1)
+residency_assignment = Assignment_Info(frame1, countries=countries)
+residency_PH = PermanentHome_Info(notebook.tab("Residency"))
+
+# variables linked to the additional parts (COVI, HA, TAXATION)
 check_COVI = StringVar()
 check_habit = StringVar()
 check_taxation = StringVar()
@@ -135,8 +209,6 @@ check_TAX = CTkCheckBox(frame2, text="TAX", variable=check_taxation, onvalue="ye
 check_TAX.configure(command=lambda obj=check_TAX: incl(obj))
 check_TAX.pack(side=LEFT, padx=25)
 
-
-
 residency_COVI = COVI_Info(notebook.tab("Residency"))
 
 
@@ -144,15 +216,14 @@ frame3 = CTkFrame(notebook.tab("Residency"))
 residency_HA = HA_Info(frame3)
 resid_taxation = Taxation_Info(frame3)
 
-button = CTkButton(notebook.tab("Residency"), text="Button!", command=residency_COVI.get_value)
+button = CTkButton(notebook.tab("Residency"), text="Button!", command=collection)
 button.pack()
 
-
-# last_name, he_she, his_her, him_her, other_country = create_variables("Mr.","Norbert","Adam","01/01/2022","01/01/2022", "01/01/2022", "01/01/2022", "Hungary", "the Bahamas", "1")
-# print(last_name)
-# print(he_she)
-# print(his_her)
-# print(him_her)
-# print(other_country)
-
 root.mainloop()
+
+
+""" HOW TO LINK FUNCTIONALITY AND INPUT?
+User fills out the forms and clicks the button.
+The button calls a function. This function should collesct all the info from the forms.
+Store the collected info in variables and pass them to other funtions.
+Other functions = functions stored in the residFunct file. """
