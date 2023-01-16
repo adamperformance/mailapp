@@ -44,6 +44,59 @@ def pri(*args):
             template_setup.man_selected = t["manager"]
             template_setup.rev_selected = t["reviewer"]
             template_setup.prep_selected = t["preparer"]
+    
+    auto_update(eng)
+
+def auto_update(eng):
+
+    q = ""
+    if template_time.quar.get() == "Q1":
+        q="first quarter"
+    elif template_time.quar.get() == "Q2":
+        q="second quarter"
+    elif template_time.quar.get() == "Q3":
+        q="third quarter"
+    elif template_time.quar.get() == "Q4":
+        q="fourth quarter"
+
+    y = template_time.year_tk.get()
+
+    updated_subj = ""
+    updated_body = ""
+    if "XCLIENTX" in template_setup.subj_selected:
+        updated_subj = template_setup.subj_selected.replace("XCLIENTX", f"{eng}")
+
+    if "XQUARTERX" in template_setup.subj_selected or "XQUARTERX" in template_setup.body_selected:
+        updated_subj = template_setup.subj_selected.replace("XQUARTERX", f"{q}")
+        updated_body = template_setup.body_selected.replace("XQUARTERX", f"{q}")
+    if "XYEARX" in template_setup.subj_selected or "XYEARX" in template_setup.body_selected:
+        updated_subj = template_setup.subj_selected.replace("XYEARX", f"{y}")
+        updated_body = template_setup.body_selected.replace("XYEARX", f"{y}")
+    
+    print(updated_body)
+    print(updated_subj)
+
+def temp_rev(*args):
+
+    if review1.get() == "yes":
+        bodytttt = f"""
+FYR
+
+Szia {template_setup.rev_selected["name"]},
+
+Ha bármit javítani kell, akkor szólj!
+
+Köszönöm!
+
+{template_setup.prep_selected["name"]}
+
+To:
+Cc: {template_setup.man_selected["email"]}, {template_setup.rev_selected["email"]}, {template_setup.prep_selected["email"]}
+
+{template_setup.body_selected}
+        """
+
+    print(bodytttt)
 
 set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -73,8 +126,11 @@ template_setup = Template_Frame(notebook.tab("Template"), emails, manager, revie
 template_setup.template.trace("w", pri)
 template_setup.eng.trace("w", pri)
 template_time = Template_Time(notebook.tab("Template"))
+review1 = StringVar()
+fyr = CTkCheckBox(notebook.tab("Template"), text="For review?", variable=review1, onvalue="yes", offvalue="no", command=temp_rev)
+fyr.pack(side=LEFT, fill=X, padx=10)
 template_button = CTkButton(notebook.tab("Template"), text="Generate")
-template_button.pack(fill=X)
+template_button.pack(fill=X, side=LEFT, padx=10)
 
 
 
@@ -87,7 +143,7 @@ template_button.pack(fill=X)
 def incl(obj):
     if obj == root.nametowidget(".!ctktabview.!ctkframe2.!ctkframe2.!ctkcheckbox"):
         if check_COVI.get() == "yes":
-            residency_COVI.add_info.pack(pady=3)
+            residency_COVI.add_info.pack(fill=X, pady=3)
         elif check_COVI.get() == "no":
             residency_COVI.add_info.pack_forget()
     elif obj == root.nametowidget(".!ctktabview.!ctkframe2.!ctkframe2.!ctkcheckbox2"):
@@ -101,7 +157,7 @@ def incl(obj):
             residency_HA.hab_abod.pack_forget()
     elif obj == root.nametowidget(".!ctktabview.!ctkframe2.!ctkframe2.!ctkcheckbox3"):
         if check_taxation.get() == "yes":
-            frame3.pack(side=LEFT, fill=Y, padx=3, pady=3)
+            frame3.pack(side=LEFT, pady=3)
             resid_taxation.taxation_info.pack(side=LEFT, pady=3)
         elif check_taxation.get() == "no" and (check_habit.get() == "no" or check_habit.get() == ""):
             frame3.pack_forget()
@@ -109,6 +165,9 @@ def incl(obj):
         elif check_taxation.get() == "no" and check_habit.get() == "yes":
             resid_taxation.taxation_info.pack_forget()
 
+
+def for_rev():
+    pass
 
 # the function that is called when the button is pressed - this initiates all the further
 # functions that run the residency determination
@@ -141,6 +200,12 @@ def collection():
 
     homeF, homeT, hostF, hostT = permhome_variables(PH_home_f,PH_home_t,PH_host_f,PH_host_t)
 
+
+    covi_fam = ""
+    covi_oth = ""
+    habit_abode = ""
+    tax = ""
+
     #if covi/etc checked --> than execute this
     if check_COVI.get() == "yes":
         spouse = residency_COVI.spouse.get()
@@ -150,33 +215,29 @@ def collection():
         assets = residency_COVI.assets.get()
         child_number = residency_COVI.child_number.get()
         family_move = residency_COVI.family_move.get()
-
-
-    # x = introduction(engagement, full_name)
-    # y = internal(last_name, year, he_she, other_country)
-    # z = perm_home(PH_home_f, PH_home_t, PH_host_f, PH_host_t, last_name, his_her, home, host, assigtype)
-    # a = covi_family(spouse, children, child_number, family_move, his_her, him_her, home, host)
-    # b = covi_other(payroll, socsec, assets, he_she, his_her, home, host)
-
-    # print(x+y+z+a)
+        covi_fam = covi_family(spouse, children, child_number, family_move, his_her, him_her, home, host)
+        covi_oth = covi_other(spouse, children, payroll, socsec, assets, he_she, his_her, home, host)
 
     if check_HA.get() == "yes":
         home_days = residency_HA.home_days.get()
         host_days = residency_HA.host_days.get()
-        hab_abode(last_name, home_days, host_days, home, host, residency)
-
-    resid_concl(last_name, residency)
-
+        habit_abode = hab_abode(last_name, home_days, host_days, home, host, residency)
+        
     if check_TAX.get() == "yes":
         exceed = resid_taxation.exceed183.get()
         dtt = resid_taxation.dtt_type.get()
         tax_date = resid_taxation.tax_date.get()
         up_from = resid_taxation.up_from.get()
-    taxation(last_name, his_her, engagement, home, host, residency, exceed)
-    # construct_email(full_name, last_name, engagement)
-    # get info from the additional parts
+        tax = taxation(last_name, his_her, engagement, home, host, residency, exceed, dtt)
+    
+    intro = introduction(engagement, full_name)
+    int_rules = internal(last_name, year, he_she, other_country)
+    ph = perm_home(PH_home_f, PH_home_t, PH_host_f, PH_host_t, last_name, his_her, home, host, assigtype)
 
-    closing()
+    res_conclusion = resid_concl(last_name, residency)
+    close = closing()
+    
+    print(intro + int_rules + ph + covi_fam + covi_oth + habit_abode + res_conclusion + tax + close)
 
     # CALL THE FUNCTION THAT WILL CREATE THE FINAL E-MAIL
     # THAT FUNCTION SHOULD INCLUDE ALL THE "introduction", etc. parts from residFunc
@@ -185,14 +246,20 @@ def construct_email():
     pass
 
 frame1 = CTkFrame(notebook.tab("Residency"))
-frame1.pack(pady=3)
+frame1.pack(fill=X, pady=3)
 frame2 = CTkFrame(notebook.tab("Residency"))
 frame2.pack(fill=X, pady=3)
+frame3 = CTkFrame(notebook.tab("Residency"))
+frame4 = CTkFrame(notebook.tab("Residency"))
+frame4.pack(fill=X, pady=3)
+frame5 = CTkFrame(notebook.tab("Residency"))
+frame5.pack(fill=X, pady=3)
 
 # create the 3 basic parts of the form
 residency_personal = Personal_Info(frame1)
 residency_assignment = Assignment_Info(frame1, countries=countries)
-residency_PH = PermanentHome_Info(notebook.tab("Residency"))
+residency_PH = PermanentHome_Info(frame4)
+residency_PH.permanent_home.pack(fill=X, pady=3, padx=3)
 
 # variables linked to the additional parts (COVI, HA, TAXATION)
 check_COVI = StringVar()
@@ -210,14 +277,15 @@ check_TAX.configure(command=lambda obj=check_TAX: incl(obj))
 check_TAX.pack(side=LEFT, padx=25)
 
 residency_COVI = COVI_Info(notebook.tab("Residency"))
-
-
-frame3 = CTkFrame(notebook.tab("Residency"))
 residency_HA = HA_Info(frame3)
 resid_taxation = Taxation_Info(frame3)
 
-button = CTkButton(notebook.tab("Residency"), text="Button!", command=collection)
-button.pack()
+review = StringVar()
+fyr = CTkCheckBox(frame5, text="For review?", variable=review, onvalue="yes", offvalue="no", command=for_rev)
+fyr.pack(side=LEFT, fill=X, padx=50)
+
+button = CTkButton(frame5, text="Button!", command=collection)
+button.pack(side=LEFT, fill=X, padx=50)
 
 root.mainloop()
 

@@ -127,7 +127,7 @@ class Assignment_Info(CTkFrame):
 class PermanentHome_Info(CTkFrame):
     def __init__(self, root=None):
         self.permanent_home = CTkFrame(root)
-        self.permanent_home.pack(fill=X, pady=3)
+
         self.PHlabel = CTkLabel(self.permanent_home, text="PH", font=(None, 30))
         self.PHlabel.grid(row=0, column=0, rowspan=3, padx=5, pady=3)
         self.ph_from_label = CTkLabel(self.permanent_home, text="From").grid(row=0, column=2)
@@ -263,7 +263,6 @@ class COVI_Info(CTkFrame):
             self.assets_home.deselect()
             self.assets_host.select()
 
-
 class HA_Info(CTkFrame):
     def __init__(self, root=None):
         self.hab_abod = CTkFrame(root)
@@ -291,8 +290,8 @@ class Taxation_Info(CTkFrame):
         self.TAXlabel = CTkLabel(self.taxation_info, text="TAXATION", font=(None, 30))
         self.TAXlabel.grid(row=0, column=0, columnspan=2, padx=3, pady=2)
 
-        self.date_to_label = CTkLabel(self.taxation_info, text="Date").grid(row=3, column=0, sticky=W, padx=10)
-        self.to_from_label = CTkLabel(self.taxation_info, text="Up to/From").grid(row=4, column=0, sticky=W, padx=10)
+        # self.date_to_label = CTkLabel(self.taxation_info, text="Date").grid(row=3, column=0, sticky=W, padx=10)
+        # self.to_from_label = CTkLabel(self.taxation_info, text="Up to/From").grid(row=4, column=0, sticky=W, padx=10)
         self.days_nonrezi_label = CTkLabel(self.taxation_info, text="Exceed 183 days?").grid(row=1, column=0, sticky=W, padx=10)
         self.dtt_type_label = CTkLabel(self.taxation_info, text="DTT Type").grid(row=2, column=0, sticky=W, padx=10)
 
@@ -310,10 +309,10 @@ class Taxation_Info(CTkFrame):
         self.dtt = ["Any 12 month", "Calendar year"]
         self.dtt_type = CTkComboBox(self.taxation_info, variable=self.dtt_type, values = self.dtt, width=100)
         self.dtt_type.grid(row=2, column=1, padx=5, pady=2)
-        self.date_to = DateEntry(self.taxation_info, variable=self.tax_date) #, width=10)
-        self.date_to.grid(row=3, column=1, padx=5, pady=2)
-        self.to_from = ["from", "to"]
-        self.to_from_sel = CTkComboBox(self.taxation_info, variable=self.up_from, values=self.to_from, width=100)
-        self.to_from_sel.grid(row=4, column=1, padx=5, pady=2)
+        # self.date_to = DateEntry(self.taxation_info, variable=self.tax_date) #, width=10)
+        # self.date_to.grid(row=3, column=1, padx=5, pady=2)
+        # self.to_from = ["from", "to"]
+        # self.to_from_sel = CTkComboBox(self.taxation_info, variable=self.up_from, values=self.to_from, width=100)
+        # self.to_from_sel.grid(row=4, column=1, padx=5, pady=2)
         # super().__init__()
 

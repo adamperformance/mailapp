@@ -41,7 +41,7 @@ def introduction(engagement, full_name):
 
 Hope this e-mail finds you well. 
 
-We are contacting you regarding one of {engagement}'s assignee, {full_name}."""
+We are contacting you regarding one of {engagement}'s assignees, {full_name}."""
 
     return introduction
 
@@ -49,7 +49,7 @@ We are contacting you regarding one of {engagement}'s assignee, {full_name}."""
 
 def internal(last_name, year, he_she, other_country):
 
-    internal = f"""According to local legislation {last_name} is considered a Hungarian tax resident in {year}.
+    internal = f""" Please note that according to local legislation {last_name} is considered a Hungarian tax resident in {year}.
 
 Should {he_she} qualify as a tax resident in {other_country} as well for the same period, the provisions of the double tax treaty (DTT) concluded between {other_country} and Hunagry should apply.
     """
@@ -101,9 +101,11 @@ def covi_family(spouse_COVI, children_COVI, child_number, family_move, his_her, 
 
     # if assignee has 1 child --> "child", else "children"
     child_ren = ""
-    if int(child_number) == 1:
+    if child_number == "":
+        pass
+    elif int(child_number) == 1:
         child_ren = "child"
-    if int(child_number) > 1:
+    elif int(child_number) > 1:
         child_ren = "children"
 
     # family move date converting
@@ -132,19 +134,20 @@ def covi_family(spouse_COVI, children_COVI, child_number, family_move, his_her, 
     elif spouse_COVI == "" and child_number != "" and child_number != "0":
         family_setup == f"{child_ren}"
 
-    COVI_text = f"As {his_her} {family_setup} {s}, {his_her} center of vital interests {c}." 
+    COVI_text = f" As {his_her} {family_setup} {s}, {his_her} center of vital interests {c}." 
 
     return COVI_text
 
 # SECTION 5 - COVI other
 
-def covi_other(payroll_COVI, soc_sec_COVI, assets_COVI, he_she, his_her, home_country, host_country):
+def covi_other(spouse_COVI, children_COVI, payroll_COVI, soc_sec_COVI, assets_COVI, he_she, his_her, home_country, host_country):
 
-
-    #ellenőrizni, hogy mi hol van és annak megfelelően beállítani a country-t
-    #ha nem jelölt semmit, akkor a megfelelő szövegrész legyen csak ""
-
+    if spouse_COVI != "" or children_COVI != "":
+        starter = " Also, "
+    elif spouse_COVI == "" and children_COVI == "":
+        starter = " As "
     
+    payroll=""
     if payroll_COVI != "":
         if payroll_COVI == "host":
             p_country = host_country
@@ -154,6 +157,7 @@ def covi_other(payroll_COVI, soc_sec_COVI, assets_COVI, he_she, his_her, home_co
     elif payroll_COVI == "":
         payroll = ""
 
+    socsec=""
     if soc_sec_COVI != "":
         if soc_sec_COVI == "host":
             s_country = host_country
@@ -165,6 +169,7 @@ def covi_other(payroll_COVI, soc_sec_COVI, assets_COVI, he_she, his_her, home_co
     elif soc_sec_COVI == "":
         socsec = ""
 
+    assets=""
     if assets_COVI != "":
         if assets_COVI == "host":
             a_country = host_country
@@ -172,7 +177,7 @@ def covi_other(payroll_COVI, soc_sec_COVI, assets_COVI, he_she, his_her, home_co
             a_country = home_country
         assets = f"had the majority of {his_her} assets in {a_country}"
 
-    COVI_other = f"{he_she} {payroll}, {socsec}, {assets}."
+    COVI_other = f"{starter} {he_she} {payroll}, {socsec}, {assets}."
     return COVI_other
 
 # SECTION 6 - Habitual Abode
@@ -181,75 +186,96 @@ def hab_abode(last_name, home_days, host_days, home_country, host_country, resid
     
     habitual_abode = f"As {last_name} spent {home_days} days in {home_country} and {host_days} days in {host_country}, his habitual abode resided in {residency}."
 
-    print(habitual_abode)
+    return habitual_abode
 
 # SECTION 7 - Residency Conclusion
 
 def resid_concl(last_name, residency):
-    residency_conclusion = f"In line with the above we are of the opinion that {last_name} should be considered a treaty resident in {residency}. Please confirm that you argee with our approach."
+    residency_conclusion = f"In line with the above we are of the opinion that {last_name} should be considered a treaty resident in {residency} . Please confirm that you argee with our approach."
 
-    print(residency_conclusion)
+    return residency_conclusion
 
 # SECTION 8 - TAXATION
 
-
-def taxation(last_name, his_her, engagement, home_country, host_country, residency, exceed183):
+def taxation(last_name, his_her, engagement, home_country, host_country, residency, exceed183, dtt_type):
     tax_matrix = [home_country, host_country, residency, exceed183]
 
+    if dtt_type == "Any 12 month":
+        calendar = "any 12 month period beginning or ending in the calendar year"
+    else:
+        calendar = "the calendar year"
+
+    taxing = ""
     x = ""
+
+    if residency == "Hungary":
+        taxing = f"""In line with the above, the part of {last_name}'s income allocated to {his_her} workdays
+in Hungary and any third country should be taxable in Hungary.
+        """
+    elif residency != "Hungary":
+        taxing = f"""In line with the above we understand that the part of {last_name}'s income allocated to {his_her}
+workdays in {residency} and any third country should be taxable in {residency}. 
+        """
 
     if tax_matrix[1] == "Hungary":
         if tax_matrix[2] == "Hungary":
             if tax_matrix[3] == "No":
-                x = f"""the part of {his_her} income allocated to {his_her} workdays in {home_country} could only be exempted from
-taxation in {host_country} if {engagement} {home_country} qualifies as {last_name}'s
-economic employer.
+                x = f"""Please note that, as {last_name}'s phyiscal presence in {home_country} did not exceed 183 day
+in CALENDAR YEAR, the part of {last_name}'s income allocated to {his_her} workdays in {home_country} could only be exempted from
+taxation in {host_country} if {engagement} {home_country} qualifies as {last_name}'s economic employer.
                 """
             elif tax_matrix[3] == "Yes":
-                x = f"""as {his_her} physical presence in {home_country} exceeded 183 days in the CALENDAR YEAR
-we understand that the part of {his_her} income relating to {his_her} workdays in {home_country}
-should be taxable in {home_country} and exempted from taxation {host_country}.
-                """
+                x = f"""As {last_name}'s physical presence in {home_country} exceeded 183 days in {calendar}
+we understand that the part of {his_her} income relating to {his_her} workdays in {home_country} should be taxable in {home_country} and exempted from taxation {host_country}.
+                """  
         elif tax_matrix[2] != "Hungary":
             if tax_matrix[3] == "No":
-                x = f"""the part of {his_her} income allocated to {his_her} workdays in {host_country} could only be exempted from
-taxation in {host_country} if {engagement} {host_country} does not qualify as {last_name}'s
-economic employer.
+                x = f"""Please note that, although {last_name}'s physical presence in Hungary did not exceed
+183 days in {calendar}, in order to minimize tax risk and exposure for both {engagement} and {last_name}, 
+the part of {his_her} income allocated to {his_her} workdays in {host_country} could only be exempted from
+taxation in {host_country} if {engagement} {host_country} does not qualify as {last_name}'s economic employer.
                 """
             elif tax_matrix[3] == "Yes":
-                x = f"""as {his_her} physical presence in {host_country} exceeded 183 days in the CALENDAR YEAR
-we understand that the part of {his_her} income relating to {his_her} workdays in {host_country}
-should be taxable in {home_country}.
+                x = f"""As {last_name}'s physical presence in {host_country} exceeded 183 days in {calendar}
+we understand that the part of {his_her} income relating to {his_her} workdays in {host_country} should be taxable in {home_country}.
                 """
     elif tax_matrix[1] != "Hungary":
         if tax_matrix[2] == "Hungary":
-            if tax_matrix[3] == "No":
-                x = f"""the part of {his_her} income allocated to {his_her} workdays in {host_country} could only be exempted from
-taxation in {home_country} if {engagement} {host_country} qualifies as {last_name}'s
-economic employer.
+            if tax_matrix[3] == "No ":
+                x = f"""Please note that, as {last_name}'s physical presence in {host_country} did not exceed 183 days
+in {calendar}, the part of {last_name}'s income allocated to {his_her} workdays in {host_country} could only be exempted from
+taxation in {home_country} if {engagement} {host_country} qualifies as {last_name}'s economic employer.
                 """
             elif tax_matrix[3] == "Yes":
-                x = f"""as {his_her} physical presence in {host_country} exceeded 183 days in the CALENDAR YEAR
+                x = f"""As {his_her} physical presence in {host_country} exceeded 183 days in {calendar}
 we understand that the part of {his_her} income relating to {his_her} workdays in {host_country}
 should be taxable in {host_country} and exempted from taxation in {home_country}.
                 """
         elif tax_matrix[2] != "Hungary":
             if tax_matrix[3] == "No":
-                x = f"""the part of {his_her} income allocated to {his_her} workdays in {home_country} could only be exempted from
-taxation in {home_country} if {engagement} {home_country} does not qualify as {last_name}'s
-economic employer.
+                x = f"""Please note that, although {last_name}'s physical presence in Hungary did not exceed 183
+days in {calendar}, in order to minimize tax risk and exposure for both {engagement} and {last_name}, the part of {his_her} 
+income allocated to {his_her} workdays in {home_country} could only be exempted from taxation in {home_country} if {engagement} 
+{home_country} does not qualify as {last_name}'s economic employer.
                 """
             elif tax_matrix[3] == "Yes":
-                x = f"""as {his_her} physical presence in {home_country} exceeded 183 days in the CALENDAR YEAR
-we understand that the part of {his_her} income relating to {his_her} workdays in {home_country}
-should be taxable in {home_country}."""
+                x = f"""As {last_name}'s physical presence in {home_country} exceeded 183 days in {calendar}
+we understand that the part of {his_her} income relating to {his_her} workdays in {home_country} should be taxable in {home_country}.
+"""
 
-    print(x)
+    taxation_conclusion = taxing + x + """ 
+Please confirm that you agree with our approach."""
+
+    return taxation_conclusion
+    
 
 # SECTION 9 - Closing
 
 def closing():
-    closing = """Thank you for your cooperation. Should you have any questions, please do not hesitate to contact us.
+    closing = """
+Thank you for your cooperation. Should you have any questions, please do not hesitate to contact us.
 
 Kind regards,
     """
+
+    return closing
