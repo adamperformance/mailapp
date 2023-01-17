@@ -5,8 +5,6 @@ from openpyxl.workbook import Workbook
 from openpyxl import load_workbook
 from customtkinter import *
 
-# ami még  kell: év, Q, stb. kiválasztása --> szöveg update ennek megfelelően!!!
-
 class Template_Choice(CTkFrame):
     def __init__(self, root=None):
         #supoer().__init__()
@@ -22,7 +20,7 @@ class Template_Choice(CTkFrame):
 
 
 class Template_Frame(CTkFrame):
-    def __init__(self, root=None, emails=[], manager=[], reviewer=[], preparer=[], engagement=[], templates=[], subjects=[], bodytexts=[]):
+    def __init__(self, root=None, emails=[], manager=[], reviewer=[], preparer=[],compspec=[], engagement=[], templates=[], subjects=[], bodytexts=[]):
         # super().__init__()
 
         #values it needs and uses
@@ -30,6 +28,7 @@ class Template_Frame(CTkFrame):
         self.manager = manager
         self.reviewer = reviewer
         self.preparer = preparer
+        self.compspec = compspec
         self.engagement = engagement
         self.templates = templates
         self.subjects = subjects
@@ -59,6 +58,7 @@ class Template_Frame(CTkFrame):
         self.man_selected = ""
         self.rev_selected = ""
         self.prep_selected = ""
+        self.compspec_selected = ""
         self.subj_selected = ""
         self.body_selected = ""
 
@@ -107,40 +107,3 @@ class Template_Time(CTkFrame):
         self.quar_label.grid(row=2, column=1, padx=2, pady=2)
         self.quar_sel = CTkComboBox(self.frame, variable=self.quar, values=self.qopt)
         self.quar_sel.grid(row=3, column=1, padx=2, pady=2)
-
-
-    #     self.generate_button = CTkButton(self.frame1, text="Generálás!", command=lambda: [self.getTemplate(), self.getEngagement()])
-    #     self.generate_button.pack()
-
-
-    #     self.another_button = CTkButton(self.frame1, text="Print!", command=self.pri) #command=self.getRemaining)
-    #     self.another_button.pack()
-
-    # def pri(self,valami):
-    #     print(valami)
-
-    # def getTemplate(self):
-    #     chosen_template = self.template_list.get()
-    #     temp_num = self.template_list.current()
-
-    #     return chosen_template, temp_num
-
-    # def getEngagement(self):
-    #     chosen_engagement = self.engagement_list.get()
-    #     # eng_num = self.engagement_list.current()
-
-    #     return chosen_engagement
-
-    # def get_emails(self):
-    #     chosen_engagement = self.engagement_list.get()
-
-    #     pass
-
-    # def getRemaining(self):
-    #     temp_chosen, temp_num = self.getTemplate()
-    #     eng_chosen, eng_num = self.getEngagement()
-    #     # print(subjects[temp_num])
-    #     # print(bodytexts[temp_num])
-    #     # print(manager[eng_num])
-    #     # print(reviewer[eng_num])
-    #     # print(preparer[eng_num])

@@ -11,7 +11,7 @@ from residencyGUI import Personal_Info, Assignment_Info, PermanentHome_Info, COV
 from residencyFunct import basic_variables, permhome_variables, introduction, internal
 from residencyFunct import perm_home, covi_family, covi_other, hab_abode, resid_concl, taxation, closing
 from templateGUI import Template_Choice, Template_Frame, Template_Time
-from templateFunct import manager, reviewer, preparer, emails, eng_name, countries, engagement_teams
+from templateFunct import manager, reviewer, preparer,comp_spec, emails, eng_name, countries, engagement_teams
 from templateFunct import templates, templates1, subjects, subjects1, bodytexts, bodytexts1
 from customtkinter import *
 
@@ -44,10 +44,18 @@ def pri(*args):
             template_setup.man_selected = t["manager"]
             template_setup.rev_selected = t["reviewer"]
             template_setup.prep_selected = t["preparer"]
-    
-    auto_update(eng)
+            template_setup.compspec_selected = t["compspec"]
 
-def auto_update(eng):
+    auto_update(eng)
+    create_email()
+
+def auto_update(engag):
+
+    eng = ""
+    try:
+        eng, x = engag.split(" ")
+    except ValueError:
+        eng = engag
 
     q = ""
     if template_time.quar.get() == "Q1":
@@ -61,25 +69,24 @@ def auto_update(eng):
 
     y = template_time.year_tk.get()
 
-    updated_subj = ""
-    updated_body = ""
-    if "XCLIENTX" in template_setup.subj_selected:
-        updated_subj = template_setup.subj_selected.replace("XCLIENTX", f"{eng}")
+    updated_subj = template_setup.subj_selected
+    updated_body = template_setup.body_selected
 
-    if "XQUARTERX" in template_setup.subj_selected or "XQUARTERX" in template_setup.body_selected:
-        updated_subj = template_setup.subj_selected.replace("XQUARTERX", f"{q}")
-        updated_body = template_setup.body_selected.replace("XQUARTERX", f"{q}")
-    if "XYEARX" in template_setup.subj_selected or "XYEARX" in template_setup.body_selected:
-        updated_subj = template_setup.subj_selected.replace("XYEARX", f"{y}")
-        updated_body = template_setup.body_selected.replace("XYEARX", f"{y}")
-    
-    print(updated_body)
-    print(updated_subj)
+    if "XCLIENTX" in updated_subj and eng != "":
+        updated_subj = updated_subj.replace("XCLIENTX", f"{eng}")
+    if q != "" and y != "":
+        if "XQUARTERX" in updated_subj or "XQUARTERX" in updated_body:
+            updated_subj = updated_subj.replace("XQUARTERX", f"{q}")
+            updated_body = updated_body.replace("XQUARTERX", f"{q}")
+        if "XYEARX" in updated_subj or "XYEARX" in updated_body:
+            updated_subj = updated_subj.replace("XYEARX", f"{y}")
+            updated_body = updated_body.replace("XYEARX", f"{y}")
+
 
 def temp_rev(*args):
-
+    body_review = ""
     if review1.get() == "yes":
-        bodytttt = f"""
+        body_review = f"""
 FYR
 
 Szia {template_setup.rev_selected["name"]},
@@ -96,7 +103,10 @@ Cc: {template_setup.man_selected["email"]}, {template_setup.rev_selected["email"
 {template_setup.body_selected}
         """
 
-    print(bodytttt)
+    print(body_review)
+
+def create_email():
+    pass
 
 set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 set_default_color_theme("green")  # Themes: "blue" (standard), "green", "dark-blue"
@@ -119,13 +129,17 @@ notebook.add("Advisory")
 
 # Template tab
 
+
 #make combo boxes searchable
 template_choice = Template_Choice(notebook.tab("Template"))
 template_choice.val.trace("w", set_template_list)
-template_setup = Template_Frame(notebook.tab("Template"), emails, manager, reviewer, preparer, eng_name, templates, subjects, bodytexts)
+template_setup = Template_Frame(notebook.tab("Template"), emails, manager, reviewer, preparer, comp_spec, eng_name, templates, subjects, bodytexts)
 template_setup.template.trace("w", pri)
 template_setup.eng.trace("w", pri)
 template_time = Template_Time(notebook.tab("Template"))
+template_time.year_tk.trace("w", pri)
+template_time.quar.trace("w", pri)
+
 review1 = StringVar()
 fyr = CTkCheckBox(notebook.tab("Template"), text="For review?", variable=review1, onvalue="yes", offvalue="no", command=temp_rev)
 fyr.pack(side=LEFT, fill=X, padx=10)
@@ -222,21 +236,21 @@ def collection():
         home_days = residency_HA.home_days.get()
         host_days = residency_HA.host_days.get()
         habit_abode = hab_abode(last_name, home_days, host_days, home, host, residency)
-        
+
     if check_TAX.get() == "yes":
         exceed = resid_taxation.exceed183.get()
         dtt = resid_taxation.dtt_type.get()
         tax_date = resid_taxation.tax_date.get()
         up_from = resid_taxation.up_from.get()
         tax = taxation(last_name, his_her, engagement, home, host, residency, exceed, dtt)
-    
+
     intro = introduction(engagement, full_name)
     int_rules = internal(last_name, year, he_she, other_country)
     ph = perm_home(PH_home_f, PH_home_t, PH_host_f, PH_host_t, last_name, his_her, home, host, assigtype)
 
     res_conclusion = resid_concl(last_name, residency)
     close = closing()
-    
+
     print(intro + int_rules + ph + covi_fam + covi_oth + habit_abode + res_conclusion + tax + close)
 
     # CALL THE FUNCTION THAT WILL CREATE THE FINAL E-MAIL
